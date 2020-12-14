@@ -23,8 +23,8 @@
  *   getComposition(Math.sin, Math.asin)(x) => Math.sin(Math.asin(x))
  *
  */
-function getComposition(/* f, g */) {
-  throw new Error('Not implemented');
+function getComposition(f, g) {
+  return (val) => f(g(val));
 }
 
 
@@ -44,8 +44,8 @@ function getComposition(/* f, g */) {
  *   power05(16) => 4
  *
  */
-function getPowerFunction(/* exponent */) {
-  throw new Error('Not implemented');
+function getPowerFunction(exponent) {
+  return (x) => x ** exponent;
 }
 
 
@@ -62,8 +62,17 @@ function getPowerFunction(/* exponent */) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-  throw new Error('Not implemented');
+function getPolynom(...args) {
+  return (x) => {
+    let result = 0;
+    let pow = args.length - 1;
+    for (let i = 0; i < args.length; i += 1) {
+      const curArg = args[i];
+      result += pow ? x ** pow * curArg : curArg;
+      pow -= 1;
+    }
+    return result;
+  };
 }
 
 
@@ -81,8 +90,16 @@ function getPolynom() {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  const memory = {};
+  return (...args) => {
+    const memFunc = JSON.stringify(...args);
+    if (!Object.prototype.hasOwnProperty.call(memory, memFunc)) {
+      memory[memFunc] = func.apply(null, ...args);
+      return memory[memFunc];
+    }
+    return memory[memFunc];
+  };
 }
 
 
@@ -169,8 +186,12 @@ function partialUsingArguments(/* fn, ...args1 */) {
  *   getId4() => 7
  *   getId10() => 11
  */
-function getIdGeneratorFunction(/* startFrom */) {
-  throw new Error('Not implemented');
+function getIdGeneratorFunction(startFrom) {
+  let memory = startFrom - 1;
+  return () => {
+    memory += 1;
+    return memory;
+  };
 }
 
 
